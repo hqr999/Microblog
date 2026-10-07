@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% blcok content %}
+{% block content %}
 <h1>Entrar</h1>
 <form action="" method="post" novalidate>
   {{ form.hidden_tag() }}
@@ -12,7 +12,7 @@
       {{ form.password.label }}<br>
       {{ form.password(size=32) }}
   </p>
-  <p>{{ form.remenber_me() }} {{ form.remenber_me.label }}</p>
+  <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
   <p>{{ form.submit() }}</p>
 </form>
 {% endblock %}
