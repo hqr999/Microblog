@@ -1,7 +1,7 @@
 from typing import Optional
 import sqlalchemy as sa 
 import sqlalchemy.orm as so 
-from app import database
+from app import database, login
 from datetime import datetime, timezone
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
@@ -41,3 +41,11 @@ class Post(database.Model):
 
     def __repr__(self):
         return '<Post {}>'.format(self.body)
+
+
+
+
+
+@login.user_loader 
+def load_user(id):
+    return database.session.get(User, int(id))
