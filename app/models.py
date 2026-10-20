@@ -3,6 +3,7 @@ import sqlalchemy as sa
 import sqlalchemy.orm as so 
 from app import database
 from datetime import datetime, timezone
+from werkzeug.security import generate_password_hash, check_password_hash
 
 
 class User(database.Model):
@@ -13,6 +14,13 @@ class User(database.Model):
     
 
     posts: so.WriteOnlyMapped['Post'] = so.relationship(back_populates='author')
+
+    def set_pwd(self,pwd):
+        self.pwd_has = generate_password_hash(pwd)
+
+    def check_pwd(self, pwd):
+        return check_password_hash(self.pwd_has,pwd)
+    
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
