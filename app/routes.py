@@ -61,3 +61,16 @@ def register():
         flash('Parabéns, você registrou um novo usuário!')
         return redirect(url_for('login'))
     return render_template('register.html', title='Registrar',form=form)
+
+
+
+@flask_app.route('/user/<username>')
+@login_required
+def user(username):
+    user = database.first_or_404(sa.select(User).where(User.username == username))
+    posts = [
+            {'autor': user, 'corpo': 'Teste post #1'},
+            {'autor': user, 'corpo': 'Teste post #2'}
+    ]
+
+    return render_template('user.html',user=user,posts=posts)
