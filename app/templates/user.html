@@ -2,11 +2,24 @@
 
 
 {% block content %}
-  <h1>Usuário: {{ user.username }}</h1>
-  <hr>
-  {% for post in posts %}
-  <p>
-    {{ post.autor.username }} diz: <b>{{ post.corpo }}</b>
-  </p>
+  <table>
+    <tr valign="top">
+      <td>
+        <img src="{{ user.avatar(128) }}" alt="Avatar de {{ user.username }}" width="128" height="128">
+      </td>
+      <td>
+        <h1>Usuário: {{ user.username }}</h1>
+      </td>
+    </tr>
+
+  </table>
+  <hr> {% for post in posts %}
+  <table>
+    <tr>    
+      <td><img src="{{ post.author.avatar(36) }}"></td>
+    <td>
+    {{ post.author.username }} diz: <br>{{ post.body }}</td>
+  </tr>
+  </table>
   {% endfor %}
 {% endblock %}

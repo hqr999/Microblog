@@ -1,3 +1,4 @@
+from hashlib import md5
 from typing import Optional
 import sqlalchemy as sa 
 import sqlalchemy.orm as so 
@@ -12,8 +13,6 @@ class User(UserMixin,database.Model):
     username: so.Mapped[str] = so.mapped_column(sa.String(64), index=True,unique=True)
     email: so.Mapped[str] = so.mapped_column(sa.String(120), index=True,unique=True)
     pwd_has: so.Mapped[Optional[str]] = so.mapped_column(sa.String(256))
-    
-
     posts: so.WriteOnlyMapped['Post'] = so.relationship(back_populates='author')
 
     def set_pwd(self,pwd):
@@ -22,6 +21,11 @@ class User(UserMixin,database.Model):
     def check_pwd(self, pwd):
         return check_password_hash(self.pwd_has,pwd)
     
+
+    def avatar(self,size):
+        digest = md5(self.email.lower().encode('utf-8')).hexdigest() 
+        return f'https://www.gravatar.com/avatar/{digest}?d=identicon&s={size}'
+
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
@@ -33,17 +37,11 @@ class Post(database.Model):
     body: so.Mapped[str] = so.mapped_column(sa.String(140))
     timestamp: so.Mapped[datetime] = so.mapped_column(index=True, default=lambda: datetime.now(timezone.utc))
     user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(User.id), index=True)
-
-
-
     author: so.Mapped[User] = so.relationship(back_populates='posts')
 
 
     def __repr__(self):
         return '<Post {}>'.format(self.body)
-
-
-
 
 
 @login.user_loader 
