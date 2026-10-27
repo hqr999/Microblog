@@ -13,13 +13,8 @@
     </tr>
 
   </table>
-  <hr> {% for post in posts %}
-  <table>
-    <tr>    
-      <td><img src="{{ post.author.avatar(36) }}"></td>
-    <td>
-    {{ post.author.username }} diz: <br>{{ post.body }}</td>
-  </tr>
-  </table>
+  <hr> 
+  {% for post in posts %}
+      {% include '_post.html' %}
   {% endfor %}
 {% endblock %}
