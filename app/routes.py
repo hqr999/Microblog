@@ -6,6 +6,7 @@ import sqlalchemy as sa
 from app.models import User
 from urllib.parse import urlsplit 
 from datetime import datetime, timezone
+from app.forms import EditorProfileForm
 
 
 @flask_app.route("/")
@@ -49,7 +50,7 @@ def logout():
 
 
 
-@flask_app.route('/register', methods=['GET','POST'])
+@flask_app.route('/registrar', methods=['GET','POST'])
 def register():
     if current_user.is_authenticated:
         return redirect(url_for('index'))
@@ -65,7 +66,7 @@ def register():
 
 
 
-@flask_app.route('/user/<username>')
+@flask_app.route('/usuario/<username>')
 @login_required
 def user(username):
     user = database.first_or_404(sa.select(User).where(User.username == username))
@@ -84,3 +85,20 @@ def before_request():
     if current_user.is_authenticated:
         current_user.last_seen = datetime.now(timezone.utc)
         database.session.commit()
+
+
+@flask_app.route('/editar_perfil', methods=['GET','POST'])
+@login_required
+def edit_profile():
+    form = EditorProfileForm()
+    if form.validate_on_submit():
+        current_user.username = form.username.data
+        current_user.about_me = form.about_me.data
+        database.session.commit()
+        flash('Suas mudanças foram salvas')
+        return redirect(url_for('edit_profile'))
+    elif request.method == 'GET':
+        form.username.data = current_user.username
+        form.about_me.data = current_user.about_me
+
+    return render_template('edit_profile.html', title='Editar Perfil',form=form)
