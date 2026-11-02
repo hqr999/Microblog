@@ -12,4 +12,4 @@ migrate = Migrate(flask_app, database)
 login = LoginManager(flask_app)
 login.login_view = 'login'
 
-from app import routes, models
+from app import routes, models, errors
